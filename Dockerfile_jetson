@@ -1,5 +1,5 @@
 FROM nvcr.io/nvidia/l4t-base:r32.5.0
-LABEL maintainer "Md Hanif Ali Sohag <hanifalisohag@gmail.com>"
+LABEL maintainer = "Vlad Kiskin<kiskinvlad@gmail.com>"
 # OS/Version (FILE): cat /etc/issue.net
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -72,7 +72,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 #Getting OpenCV
 RUN mkdir /opencv_build
 WORKDIR  /opencv_build
-RUN git clone https://github.com/opencv/opencv.git
+RUN git clone https://github.com/kiskinvlad/opencv
 
 #Compiling OpenCV
 RUN mkdir /opencv_build/opencv/build
@@ -89,7 +89,7 @@ RUN make install
 
 #Getting YOLOv4/YOLOv3 
 WORKDIR  /
-RUN git clone https://github.com/AlexeyAB/darknet.git
+RUN git clone https://github.com/kiskinvlad/darknet.git
 WORKDIR  /darknet
 #Update Makefile
 RUN sed -i '1 s/GPU=0/GPU=1/' Makefile

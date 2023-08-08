@@ -1,5 +1,5 @@
-FROM nvidia/cuda:10.2-cudnn8-devel-ubuntu18.04
-LABEL maintainer "Md Hanif Ali Sohag <hanifalisohag@gmail.com>"
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
+LABEL maintainer = "Vlad Kiskin<kiskinvlad@gmail.com>"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
@@ -13,7 +13,7 @@ RUN apt-get install -y build-essential cmake git pkg-config libgtk-3-dev \
 #Getting OpenCV
 RUN mkdir /opencv_build
 WORKDIR  /opencv_build
-RUN git clone https://github.com/opencv/opencv.git
+RUN git clone https://github.com/kiskinvlad/opencv
 
 #Compiling OpenCV
 RUN mkdir /opencv_build/opencv/build
@@ -23,6 +23,11 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D INSTALL_C_EXAMPLES=ON \
     -D INSTALL_PYTHON_EXAMPLES=ON \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
+    -D WITH_CUDA=ON \
+    -D WITH_CUDNN=ON \
+    -D OPENCV_DNN_CUDA=ON \
+    -D CUDA_ARCH_BIN=8.6 \
+    -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ \
     -D BUILD_EXAMPLES=ON ..
 
 RUN make -j$(cat /proc/cpuinfo | grep processor | wc -l)
@@ -30,7 +35,7 @@ RUN make install
 
 #Getting YOLOv4/YOLOv3 
 WORKDIR  /
-RUN git clone https://github.com/AlexeyAB/darknet.git
+RUN git clone https://github.com/kiskinvlad/darknet.git
 WORKDIR  /darknet
 #Update Makefile
 RUN sed -i '1 s/GPU=0/GPU=1/' Makefile
