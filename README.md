@@ -2,7 +2,7 @@
 
 ### Build it
 ```
-$ docker build -t umka/umka:gpu -f Dockerfile.gpu .
+$ docker build -t umka/umka:gpu -f Dockerfile .
 ```
 
 ### Run it
