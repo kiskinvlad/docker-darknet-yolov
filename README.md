@@ -20,6 +20,22 @@ $ ./darknet detector test ./cfg/coco.data ./cfg/yolov4.cfg yolov4.weights data/d
 ```
 $ ./darknet detector test ./cfg/coco.data ./cfg/yolov3.cfg yolov3.weights data/dog.jpg -dont_show
 ```
+## For video testing:
+### Static video
+```
+$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu \
+  -v '${pwd}/workspace/data/test:/darknet' \
+  /bin/bash
+$ ./darknet detector demo ./cfg/coco.data ./cfg/yolov4.cfg yolov4.weights test.mp4 -out_filename /workspace/data/result/res.avi 
+```
+
+### Stream video
+```
+$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu \
+  /bin/bash
+$ ./darknet detector demo ./cfg/coco.data ./cfg/yolov4.cfg  yolov4.weights rtsp://172.31.0.1:8080/live -mjpeg_port 8090 -ext_output
+```
+Note: rtsp server address and port would be other
 
 ## For training:
   
