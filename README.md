@@ -10,7 +10,6 @@ $ docker build -t umka/umka:gpu -f Dockerfile .
 $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu /bin/bash
 ```
 
-
 ### Test it
 #### YOLOv4
 ```
@@ -23,16 +22,13 @@ $ ./darknet detector test ./cfg/coco.data ./cfg/yolov3.cfg yolov3.weights data/d
 ## For video testing:
 ### Static video
 ```
-$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu \
-  -v '${pwd}/workspace/data/test:/darknet' \
-  /bin/bash
-$ ./darknet detector demo ./cfg/coco.data ./cfg/yolov4.cfg yolov4.weights test.mp4 -out_filename /workspace/data/result/res.avi 
+$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -v ${pwd}:/workspace -w /darknet  -it umka/umka:gpu /bin/bash
+$ ./darknet detector demo ./cfg/coco.data ./cfg/yolov4.cfg yolov4.weights /workspace/dataset/data/test/test.mp4 -out_filename /workspace/dataset/data/result/res.avi 
 ```
 
 ### Stream video
 ```
-$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu \
-  /bin/bash
+$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka  --rm -v ${pwd}:/workspace -w /darknet -it umka/umka:gpu /bin/bash
 $ ./darknet detector demo ./cfg/coco.data ./cfg/yolov4.cfg  yolov4.weights rtsp://172.31.0.1:8080/live -mjpeg_port 8090 -ext_output
 ```
 Note: rtsp server address and port would be other
@@ -44,9 +40,9 @@ Note: rtsp server address and port would be other
 ```
 $ git clone https://github.com/kiskinvlad/docker-darknet-yolov.git
 ```
-2. Put all your custom ".jpg" and ".txt" annotations on this folder : `/workspace/data/obj`
+2. Put all your custom ".jpg" and ".txt" annotations on this folder : `/dataset/data/obj`
 
-3. Generate the **val.txt** and **train.txt** on the **/workspace/data** folder 
+3. Generate the **val.txt** and **train.txt** on the **/dataset/data** folder 
 ``` 
 $ cd workspace
 $ python train_test_split.py
@@ -54,7 +50,7 @@ OR
 $ python3 train_test_split.py
 ```
 4. Please change the **yolo-obj.cfg**, **obj.data** and **yolo-obj.names** file according to your custom class numbers and ***YOLOv3 and YOLOv4***. This repo has been configured of **6 classes** for **YOLOv3**
-5. The full **workspace** direcotry structures should look like below-
+5. The full **workspace** directory structures should look like below-
 ```
 ├── data
 │   ├── obj
@@ -73,13 +69,13 @@ $ python3 train_test_split.py
 ## Run the following command to start the training (Manually)
 ```
 $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu\
-  -v '${pwd}/workspace/data/obj:/darknet/data/obj' \
-  -v '${pwd}/workspace/data/val.txt:/darknet/data/val.txt' \
-  -v '${pwd}/workspace/data/train.txt:/darknet/data/train.txt' \
-  -v '${pwd}/workspace/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
-  -v '${pwd}/workspace/obj.data:/darknet/obj.data' \
-  -v '${pwd}/workspace/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
-  -v '${pwd}/workspace/backup:/darknet/backup' \
+  -v '${pwd}/dataset/data/obj:/darknet/data/obj' \
+  -v '${pwd}/dataset/data/val.txt:/darknet/data/val.txt' \
+  -v '${pwd}/dataset/data/train.txt:/darknet/data/train.txt' \
+  -v '${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
+  -v '${pwd}/dataset/obj.data:/darknet/obj.data' \
+  -v '${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
+  -v '${pwd}/dataset/backup:/darknet/backup' \
    /bin/bash
   
 ```  
@@ -96,26 +92,26 @@ $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka
 #### YOLOv3
 ```
 $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm umka/umka:gpu -d\
-  -v '${pwd}/workspace/data/obj:/darknet/data/obj' \
-  -v '${pwd}/workspace/data/val.txt:/darknet/data/val.txt' \
-  -v '${pwd}/workspace/data/train.txt:/darknet/data/train.txt' \
-  -v '${pwd}/workspace/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
-  -v '${pwd}/workspace/obj.data:/darknet/obj.data' \
-  -v '${pwd}/workspace/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
-  -v '${pwd}/workspace/backup:/darknet/backup' \
+  -v '${pwd}/dataset/data/obj:/darknet/data/obj' \
+  -v '${pwd}/dataset/data/val.txt:/darknet/data/val.txt' \
+  -v '${pwd}/dataset/data/train.txt:/darknet/data/train.txt' \
+  -v '${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
+  -v '${pwd}/dataset/obj.data:/darknet/obj.data' \
+  -v '${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
+  -v '${pwd}/dataset/backup:/darknet/backup' \
   ./darknet detector train obj.data yolo-obj.cfg darknet53.conv.74 -map -dont_show
 ```
 
 #### YOLOv4
 ```
 $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm umka/umka:gpu -d\
-  -v '${pwd}/workspace/data/obj:/darknet/data/obj' \
-  -v '${pwd}/workspace/data/val.txt:/darknet/data/val.txt' \
-  -v '${pwd}/workspace/data/train.txt:/darknet/data/train.txt' \
-  -v '${pwd}/workspace/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
-  -v '${pwd}/workspace/obj.data:/darknet/obj.data' \
-  -v '${pwd}/workspace/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
-  -v '${pwd}/workspace/backup:/darknet/backup' \
+  -v '${pwd}/dataset/data/obj:/darknet/data/obj' \
+  -v '${pwd}/dataset/data/val.txt:/darknet/data/val.txt' \
+  -v '${pwd}/dataset/data/train.txt:/darknet/data/train.txt' \
+  -v '${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
+  -v '${pwd}/dataset/obj.data:/darknet/obj.data' \
+  -v '${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
+  -v '${pwd}/dataset/backup:/darknet/backup' \
   ./darknet detector train obj.data yolo-obj.cfg yolov4.conv.137 -map -dont_show
 ```
 
@@ -124,8 +120,6 @@ $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm umka/umka:gpu
 $docker attach --detach-keys="ctrl-a,x" darknet_training
 ```
 In order to get out of the container without exiting it **press** `CTRL+A` then **press** `X`. It will get the user out of the running container.
-
-
 
 ### Starting a stopped container
 First get the docker container ID/Name
@@ -145,7 +139,7 @@ $ docker rm -f umka
 ```
 
 ## To continue a finished training
-We can change the iteration number of the config file located at **/workspace/yolo-obj.cfg** and restart the training from where we stopped or finished training (Suppose, it was **100200**). You need to change the following lines 150200 and steps would be 80% (120160), 90% (135180)
+We can change the iteration number of the config file located at **/dataset/yolo-obj.cfg** and restart the training from where we stopped or finished training (Suppose, it was **100200**). You need to change the following lines 150200 and steps would be 80% (120160), 90% (135180)
 
 ```
 max_batches = 150200
@@ -162,13 +156,13 @@ Now, to start the training run the following command again. Please change the la
 
 ```
 $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu -d\
-  -v '${pwd}/workspace/data/obj:/darknet/data/obj' \
-  -v '${pwd}/workspace/data/val.txt:/darknet/data/val.txt' \
-  -v '${pwd}/workspace/data/train.txt:/darknet/data/train.txt' \
-  -v '${pwd}/workspace/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
-  -v '${pwd}/workspace/obj.data:/darknet/obj.data' \
-  -v '${pwd}workspace/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
-  -v '${pwd}/workspace/backup:/darknet/backup' \
+  -v '${pwd}/dataset/data/obj:/darknet/data/obj' \
+  -v '${pwd}/dataset/data/val.txt:/darknet/data/val.txt' \
+  -v '${pwd}/dataset/data/train.txt:/darknet/data/train.txt' \
+  -v '${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
+  -v '${pwd}/dataset/obj.data:/darknet/obj.data' \
+  -v '${pwd}dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
+  -v '${pwd}/dataset/backup:/darknet/backup' \
   ./darknet detector train obj.data yolo-obj.cfg backup/yolo-obj_100000.weights -map
 ```
 
