@@ -23,11 +23,6 @@ RUN cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D INSTALL_C_EXAMPLES=ON \
     -D INSTALL_PYTHON_EXAMPLES=ON \
     -D OPENCV_GENERATE_PKGCONFIG=ON \
-    -D WITH_CUDA=ON \
-    -D WITH_CUDNN=ON \
-    -D OPENCV_DNN_CUDA=ON \
-    -D CUDA_ARCH_BIN=8.6 \
-    -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda/ \
     -D BUILD_EXAMPLES=ON ..
 
 RUN make -j$(cat /proc/cpuinfo | grep processor | wc -l)
