@@ -1,3 +1,4 @@
 .idea
-dataset/data/obj/*
+dataset/data/obj/*.jpg
+dataset/data/obj/*.txt
 dataset/backup/*
