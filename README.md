@@ -71,9 +71,10 @@ $ python3 train_test_split.py
 ```
 ## Run the following command to start the training (Manually)
 ```
-$ docker run -v ${pwd}/dataset/data/obj:/darknet/data/obj -v ${pwd}/dataset/data/val.txt:/darknet/data/val.txt -v ${pwd}/dataset/data/train.txt:/darknet/data/train.txt -v ${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names -v ${pwd}/dataset/obj.data:/darknet/obj.data -v ${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg -v ${pwd}/dataset/backup:/darknet/backup -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu /bin/bash
+ docker run -v ${pwd}/dataset/data/obj:/darknet/data/obj -v ${pwd}/dataset/data/val.txt:/darknet/data/val.txt -v ${pwd}/dataset/data/train.txt:/darknet/data/train.txt -v ${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names -v ${pwd}/dataset/obj.data:/darknet/obj.data -v ${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg -v ${pwd}/dataset/backup:/darknet/backup -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu /bin/bash
   
 ```  
+
 ### Inside the running container (/darknet#):
 #### YOLOv3
 ```
@@ -108,6 +109,12 @@ $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm umka/umka:gpu
   -v '${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
   -v '${pwd}/dataset/backup:/darknet/backup' \
   ./darknet detector train obj.data yolo-obj.cfg yolov4.conv.137 -map -dont_show
+```
+
+### Run demo with trained weights
+```
+ docker run -v ${pwd}/dataset/data/obj:/darknet/data/obj -v ${pwd}/dataset/data/val.txt:/darknet/data/val.txt -v ${pwd}/dataset/data/train.txt:/darknet/data/train.txt -v ${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names -v ${pwd}/dataset/obj.data:/darknet/obj.data -v ${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg -v ${pwd}/dataset/backup:/darknet/backup -v ${pwd}:/workspace -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu /bin/bash
+ ./darknet detector demo obj.data yolo-obj.cfg backup/yolo-obj_1000.weights /workspace/dataset/data/test/test.mp4 -out_filename /workspace/dataset/data/result/res.avi
 ```
 
 ### To attach to the container
