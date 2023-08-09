@@ -43,8 +43,11 @@ $ git clone https://github.com/kiskinvlad/docker-darknet-yolov.git
 2. Put all your custom ".jpg" and ".txt" annotations on this folder : `/dataset/data/obj`
 
 3. Generate the **val.txt** and **train.txt** on the **/dataset/data** folder 
+Note: to rewrite class id in each image label .txt file use next script:
+```python class_id_modifier.py <path_to_folder_with_txt> <class_number>
+```
 ``` 
-$ cd workspace
+$ cd dataset
 $ python train_test_split.py
 OR
 $ python3 train_test_split.py
@@ -68,15 +71,7 @@ $ python3 train_test_split.py
 ```
 ## Run the following command to start the training (Manually)
 ```
-$ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu\
-  -v '${pwd}/dataset/data/obj:/darknet/data/obj' \
-  -v '${pwd}/dataset/data/val.txt:/darknet/data/val.txt' \
-  -v '${pwd}/dataset/data/train.txt:/darknet/data/train.txt' \
-  -v '${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names' \
-  -v '${pwd}/dataset/obj.data:/darknet/obj.data' \
-  -v '${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg' \
-  -v '${pwd}/dataset/backup:/darknet/backup' \
-   /bin/bash
+$ docker run -v ${pwd}/dataset/data/obj:/darknet/data/obj -v ${pwd}/dataset/data/val.txt:/darknet/data/val.txt -v ${pwd}/dataset/data/train.txt:/darknet/data/train.txt -v ${pwd}/dataset/data/yolo-obj.names:/darknet/data/yolo-obj.names -v ${pwd}/dataset/obj.data:/darknet/obj.data -v ${pwd}/dataset/yolo-obj.cfg:/darknet/yolo-obj.cfg -v ${pwd}/dataset/backup:/darknet/backup -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka:gpu /bin/bash
   
 ```  
 ### Inside the running container (/darknet#):
@@ -86,7 +81,7 @@ $ docker run -p 8080:8080 -p 8090:8090 --gpus all --name umka --rm -it umka/umka
 ```
 #### YOLOv4
 ```
-./darknet detector train obj.data yolo-obj.cfg yolov4.conv.137 -map -dont_show
+./darknet detector train obj.data yolo-obj.cfg yolov4.conv.137 -map -dont_show -mjpeg_port 8090 -ext_output
 ```
 ## Running the container in detached mode:
 #### YOLOv3
